@@ -20,7 +20,7 @@ export default function timer(){
 
   // On update gets called each tick with the current time
   t.onUpdate = function(time){
-    console.log(time);
+    // console.log(time);
   };
   t.setUpdate = function(f) {
     t.onUpdate = f;
@@ -74,8 +74,6 @@ export default function timer(){
 
   // Main function, increments time, and calls onUpdate
   t.tick = function() {
-    // if(!t.ticking) return;
-
     t.currentTime += 1;
     if (t.currentTime > t.maxTime) {
       t.currentTime = 0;

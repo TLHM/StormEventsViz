@@ -12,7 +12,7 @@ export default function dataManager(){
     "geoQ" : dq.queue(),
     "stormQ" : dq.queue(),
     "geoLoc" : "https://d3js.org/us-10m.v1.json",
-    "stormLoc" : "countyEventsMin.json", // "https://datahub.io/tlhm/countyeventsmin-rare-mole-24/r/0.json",
+    "stormLoc" : "https://datahub.io/tlhm/countyeventsmin-rare-mole-24/r/0.json",
     "geoReady" : function(d){console.log(d);},
     "stormReady" : function(d){console.log(d);}
   };

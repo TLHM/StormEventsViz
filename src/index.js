@@ -24,7 +24,6 @@ var baseMap = usMap()
   .layerConfig([
     {
       name:'Flooding',
-      //scale:d3.scaleSequential([0,120], d3.interpolateViridis),
       scale: d3.scaleSequential((d) => d3.interpolatePuBu(logScale(d))),
       numScale: d3.scaleSymlog().domain([0,120]).range([0,120]),
       dataID: 'f',
@@ -33,16 +32,13 @@ var baseMap = usMap()
 
     {
       name:'Windy',
-      //scale:d3.scaleSequential([0,120], d3.interpolateCool),
       scale: d3.scaleSequential((d) => d3.interpolateBuGn(logScale(d))),
       numScale: d3.scaleSymlog().domain([0,120]).range([0,120]),
       dataID: 'w',
       mask: 'diagMask',//'dotMask'
     }
   ]);
-var a = baseMap.layerConfig();
-console.log(a[0].scale(5));
-console.log(a[1].scale(5));
+
 // Create the map svg
 var mapDiv = d3.select('body').append('div')
   .attr('id', 'MapBase')
@@ -64,18 +60,18 @@ pat.append('path')
   .attr('d','M 3,0 L 5,2');
 
 // Dot pattern
-var pat = map.addPattern('patDot');
-pat.attr('width',3).attr('height',3);
-pat.append('rect')
-  .attr('fill','white')
-  .attr('x',2)
-  .attr('y',2)
-  .attr('width','1')
-  .attr('height','1');
+// var pat = map.addPattern('patDot');
+// pat.attr('width',3).attr('height',3);
+// pat.append('rect')
+//   .attr('fill','white')
+//   .attr('x',2)
+//   .attr('y',2)
+//   .attr('width','1')
+//   .attr('height','1');
 
-// Creat mask with each pattern
+// Create mask with each pattern
 map.addMask('diagMask', 'patDiag');
-map.addMask('dotMask', 'patDot');
+// map.addMask('dotMask', 'patDot');
 
 // Create the lower timeChart
 var timeDiv = d3.select('body').append('div')
@@ -109,10 +105,10 @@ map.onCountySelection = function(countyID) {
   tChart.setLines(countyData);
 };
 
-// Callback for loading our geography
+// Set callback for loading our geography
 dm.setGeo(map.drawGeo);
 
-// Callback for loading our storm data
+// Set callback for loading our storm data
 dm.setStorm(function(d){
   time.start();
   map.endLoading();
@@ -133,3 +129,10 @@ time.setUpdate(onTick);
 
 // Start loading
 dm.start();
+
+
+// Add some description to the bottom
+var desc = d3.select('body').append('div').attr('id','description')
+  .attr('style', "width:900px; margin: 0 auto; font-family: Trebuchet MS, sans-serif;text-align: center;");
+desc.append('p').text("Helllooooo");
+desc.append('a').attr('href','https://github.com/TLHM/StormEventsViz').text('View on Github');

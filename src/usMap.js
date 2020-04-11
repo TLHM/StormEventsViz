@@ -106,13 +106,6 @@ export default function usMap(){
       // For selecting a county (on click)
       chart.curSelection = null;
       chart.select = function(d) {
-        // Set stroke to normal on old selection, if it exists
-        // if(chart.curSelection) {
-        //   chart.curSelection.attr('stroke','none');
-        // }
-        //
-        // chart.curSelection = d3.select(this).attr('stroke','cyan');
-
         // Copy the path data from our selection to the highlight
         chart.highlight.attr('d', d3.select(this).attr('d'));
 
@@ -128,11 +121,12 @@ export default function usMap(){
       chart.countyBG = bgColor;
 
       // For adding gradients, based on a d3 color scale
-      // First is the color scale, next is the id of the gradient
-      // Next is a scale that maps from y values to the width of the rect
-      // And finally, the width of the rect
-      chart.addGrad = function(color, num, numScale, width) {
-        var grad = chart.defs.append('linearGradient').attr('id','grad'+num)
+      // color: d3 color scale
+      // gradID: id of the gradient (string or integer)
+      // numScale: d3 scale that maps from y values to the width of the rect
+      // width: the width of the intended rect
+      chart.addGrad = function(color, gradID, numScale, width) {
+        var grad = chart.defs.append('linearGradient').attr('id','grad'+gradID)
           .attr('x1','0')
           .attr('x2','1')
           .attr('y1','0')
@@ -182,11 +176,8 @@ export default function usMap(){
 
       // Draw our geography once we load it
       chart.drawGeo = function(us) {
-        console.log(us);
-        console.log(topo.feature(us, us.objects.nation).features);
 
         chart.counties.selectAll("path")
-          //.data(topo.feature(us, us.objects.nation).features)
           .data(topo.feature(us, us.objects.counties).features)
           .enter().append("path")
             .attr('id', function(d){ return d.id; })
@@ -196,6 +187,9 @@ export default function usMap(){
             .attr("class","county")
             .on('click', chart.select);
 
+        // We'll have layers to display different data with different patterns
+        // Gets a bit slow, it's a lot faster to just change the color of
+        // one layer, than have several with opactiy what not to render
         chart.layers = [];
         var rw = 120, rh = 15, spacing = 70;
         layerConfig.forEach(function(conf,i){
@@ -252,21 +246,13 @@ export default function usMap(){
         // Update time title
         chart.timeTitle.text(timer.getTimeStr());
 
-        var allCounties = chart.counties.selectAll('.county');
-
         // Don't update non-existant things
-        if(allCounties.empty()) return;
+        if(chart.layers.length == 0) return;
 
         // Get the current timepoint's data
         chart.curStorms = dataManager.getStormAtTime(curTime);
 
         if(!chart.curStorms) return;
-
-        // if(debugCount < 5){
-        //   debugCount += 1;
-        //
-        //   console.log(chart.curStorms);
-        // }
 
         // Show the flooding
         layerConfig.forEach(function(conf,i){
@@ -275,11 +261,6 @@ export default function usMap(){
             return conf.scale(chart.curStorms[d.id][conf.dataID]);
           });
         });
-        // allCounties.attr('fill', function(d){
-        //   if(!chart.curStorms[d.id]) return chart.countyBG;
-        //
-        //   return d3.rgb(0,30+chart.curStorms[d.id].w,30+chart.curStorms[d.id].f);
-        // });
       };
 
       // Function to end the loading indication

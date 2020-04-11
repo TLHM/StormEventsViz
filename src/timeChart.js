@@ -46,7 +46,6 @@ export default function timeChart() {
     plot.body.append('rect').attr('id','bg')
       .attr('width',(plot.size.width-plot.margin.left-plot.margin.right)+'px')
       .attr('height',(plot.size.height-plot.margin.top-plot.margin.bottom)+'px')
-      //.attr('fill', 'rgb(51, 27, 40)')
       .attr('fill-opacity','.001');
 
     // Group for lines
