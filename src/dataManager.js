@@ -12,7 +12,7 @@ export default function dataManager(){
     "geoQ" : dq.queue(),
     "stormQ" : dq.queue(),
     "geoLoc" : "https://d3js.org/us-10m.v1.json",
-    "stormLoc" : "countyEvents.json",
+    "stormLoc" : "countyEventsMin.json", // "https://datahub.io/tlhm/countyeventsmin-rare-mole-24/r/0.json",
     "geoReady" : function(d){console.log(d);},
     "stormReady" : function(d){console.log(d);}
   };
@@ -67,9 +67,9 @@ export default function dataManager(){
 
     var fl =[], wi =[], ic =[];
     dm.stormData.slice(startInd).forEach((d,i) => {
-      fl.push((d[countyID] && d[countyID].floods) ? d[countyID].floods : 0);
-      wi.push((d[countyID] && d[countyID].winds) ? d[countyID].winds : 0);
-      ic.push((d[countyID] && d[countyID].ice) ? d[countyID].ice : 0);
+      fl.push((d[countyID] && d[countyID].f) ? d[countyID].f : 0);
+      wi.push((d[countyID] && d[countyID].w) ? d[countyID].w : 0);
+      ic.push((d[countyID] && d[countyID].i) ? d[countyID].i : 0);
     });
 
     return [fl, wi, ic];

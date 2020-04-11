@@ -10,7 +10,9 @@ export default function timeChart() {
     timeTicks,
     yRange,
     yLabel,
+    lineLabels,
     lineStyles,
+    onPlay,
     onSelectTime;
 
   // Create our plot
@@ -21,11 +23,18 @@ export default function timeChart() {
     };
 
     // Set our margins
-    plot.margin = {top: 10, right: 10, bottom: 20, left: 50};
+    plot.margin = {top: 10, right: 90, bottom: 20, left: 50};
 
     // Get our selection
     plot.selection = sel;
-    plot.size = {width: 800, height: 150};
+    plot.size = {width: 880, height: 150};
+
+    // Create header div for play button
+    plot.controls = plot.selection.append('div').attr('id', 'timeController')
+      .attr('style','width:150px; margin:0 auto');
+    plot.controls.append('button').attr('type','button')
+      .text('Play')
+      .on('click', onPlay);
 
     // Create the base svg
     plot.svg = plot.selection.append('svg').attr('id', 'timePlot')
@@ -41,6 +50,28 @@ export default function timeChart() {
 
     // Group for lines
     plot.lineG = plot.body.append('g').attr('id', 'lineG');
+
+    // Add legend
+    plot.legend = plot.svg.append('g').attr('id', 'timeChartLegend')
+      .attr('transform','translate('+(plot.size.width - plot.margin.right)+
+        ','+(plot.size.height / 2)+')');
+    plot.leglabels = plot.legend.selectAll('g')
+      .data(lineLabels)
+      .join('g')
+        .attr('id','chanLabel');
+    plot.leglabels.append('line')
+      .attr('x1', function(d,i){ return 10; })
+      .attr('x2', function(d,i){ return 30; })
+      .attr('y1', function(d,i){ return 20*i; })
+      .attr('y2', function(d,i){ return 20*i; })
+      .attr('style', function(d,i){ return lineStyles ? lineStyles[i] : 'stroke-width=2'; });
+    plot.leglabels.append('text')
+      .attr("font-family", "sans-serif")
+      .attr("font-size", 10)
+      .attr("text-anchor", "left")
+      .attr("y", function(d,i){ return 20*i + 4; })
+      .attr("x", function(d,i){ return 35; })
+      .text(function(d){ return d; });
 
     // Create our xAxis
     plot.xScale = d3.scaleTime()
@@ -68,8 +99,6 @@ export default function timeChart() {
       .attr('fill','currentColor')
       .attr('text-anchor','middle')
       .text(yLabel);
-    console.log(plot.yScale);
-    console.log(yRange);
 
     // Create an indicator of the currentTime
     plot.curTime = plot.body.append('rect').attr('id', 'curTimeLine')
@@ -91,6 +120,11 @@ export default function timeChart() {
         })
         .y(function(d,i){ return plot.yScale(d); });
     };
+
+    // Updates our time indicator
+    plot.setTime = function(curTime) {
+      plot.curTime.attr('x', plot.xScale(curTime));
+    }
 
     // Function to plot lines in this
     // d should be an array of arrays of y values
@@ -164,6 +198,20 @@ export default function timeChart() {
   plot.lineStyles = function(_) {
     if (arguments.length == 0) return lineStyles;
     lineStyles = _;
+    return plot;
+  }
+
+  // line labels
+  plot.lineLabels = function(_) {
+    if (arguments.length == 0) return lineLabels;
+    lineLabels = _;
+    return plot;
+  }
+
+  // onPlay
+  plot.onPlay = function(_) {
+    if (arguments.length == 0) return onPlay;
+    onPlay = _;
     return plot;
   }
 

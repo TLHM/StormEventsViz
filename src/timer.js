@@ -55,7 +55,10 @@ export default function timer(){
     t.onUpdate(t.getTime());
 
     // Stop the ticks
-    if(t.ticker) clearInterval(t.ticker);
+    if(t.ticker){
+      clearInterval(t.ticker);
+      t.ticker = null;
+    }
   };
 
   // Get current time
@@ -71,7 +74,7 @@ export default function timer(){
 
   // Main function, increments time, and calls onUpdate
   t.tick = function() {
-    if(!t.ticking) return;
+    // if(!t.ticking) return;
 
     t.currentTime += 1;
     if (t.currentTime > t.maxTime) {
@@ -83,7 +86,7 @@ export default function timer(){
 
   // Starts the ticking
   t.start = function() {
-    t.ticking = true;
+    if(t.ticker) return; // Don't start it if it's already going
 
     // Queue next tick
     t.ticker = setInterval(t.tick, t.updateInterval);
