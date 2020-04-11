@@ -4,13 +4,19 @@
 */
 
 export default function timer(){
+  var months = ["Jan", "Feb", "Mar", "Apr",
+      "May", "Jun", "Jul", "Aug",
+      "Sep", "Oct", "Nov", "Dec"
+  ];
+
   var t = {};
 
   t.currentTime = 0;
   t.maxTime = 0;
   t.shift = 0;
-  t.updateInterval = 1000/12.0;
+  t.updateInterval = 1000/6.0;
   t.ticking = true;
+  t.baseYear = 1996;
 
   // On update gets called each tick with the current time
   t.onUpdate = function(time){
@@ -23,7 +29,7 @@ export default function timer(){
   // Change the update speed
   t.setFPS = function(fps) {
     t.updateInterval = 1000 / fps;
-  }
+  };
 
   // Set max Time
   // Parameter should not include the shift
@@ -37,6 +43,11 @@ export default function timer(){
     t.shift = s;
   };
 
+  // Set the base year
+  t.setBaseYear = function(year) {
+    t.baseYear = year;
+  };
+
   // Set current time; also stops the timer
   t.setTime = function(time) {
     t.currentTime = time - t.shift;
@@ -44,13 +55,19 @@ export default function timer(){
     t.onUpdate(t.getTime());
 
     // Stop the ticks
-    t.ticking = false;
+    if(t.ticker) clearInterval(t.ticker);
   };
 
   // Get current time
   t.getTime = function() {
     return t.currentTime + t.shift;
   };
+
+  // Get Current time as string
+  t.getTimeStr = function() {
+    var time = t.getTime();
+    return months[time%12] + " " + (Math.floor(time / 12) + t.baseYear);
+  }
 
   // Main function, increments time, and calls onUpdate
   t.tick = function() {
@@ -62,15 +79,14 @@ export default function timer(){
     }
 
     t.onUpdate(t.getTime());
-
-    // Queue next tick
-    setInterval(t.tick, t.updateInterval);
   };
 
   // Starts the ticking
   t.start = function() {
     t.ticking = true;
-    t.tick();
+
+    // Queue next tick
+    t.ticker = setInterval(t.tick, t.updateInterval);
   };
 
   return t;

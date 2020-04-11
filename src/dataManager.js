@@ -17,43 +17,13 @@ export default function dataManager(){
     "stormReady" : function(d){console.log(d);}
   };
 
-  // We've finished setting up the callbacks, time to being the loading
+  // We've finished setting up the callbacks, time to begin the loading
   dm.start = function(){
     fetch(dm.geoLoc).then(res => res.json())
       .then(dm.geoReady);
 
     fetch(dm.stormLoc).then(res => res.json())
       .then(dm.stormReady);
-
-    // dm.geoQ.defer(df.json, dm.geoLoc)
-    //   .await(dm.geoReady);
-    //
-    // dm.stormQ.defer(df.json, dm.stormLoc)
-    //   .await(dm.stormReady);
-    //
-    //  var xhr = new XMLHttpRequest();
-    //  var myProgress=0;
-    //
-    //  xhr.open('GET', dm.geoLoc, true);
-    //  xhr.responseType = 'json';
-    //  console.log("Fetching "+dm.geoLoc);
-    //  //Call callback when loaded
-    //  xhr.addEventListener('load', function () {
-    //     console.log("Loaded file.");
-    //     dm.geoReady(xhr);
-    //  });
-    //  //Update progress bar as we load
-    //  // xhr.addEventListener('progress', function(oEvent){
-    //  //    myProgress = ( oEvent.loaded / oEvent.total ) * 60;
-    //  // });
-    //
-    //  xhr.send();
-    //
-    //  //Make the loading bar keep track of progress
-    //  // load.set("expr", function(emit){
-    //  //    emit(-30,-8);
-    //  //    emit(-30+myProgress,-8);
-    //  // });
   };
 
   // Functions to set up the callbacks
@@ -70,6 +40,8 @@ export default function dataManager(){
       // if (error) throw error;
 
       dm.stormData = data;
+      console.log(dm.stormData);
+
       func(data);
     };
   };
@@ -88,6 +60,20 @@ export default function dataManager(){
 
     return dm.stormData[timept];
   }
+
+  // Get the full data for a specific county
+  dm.getCountyData = function(countyID, startInd) {
+    if (! dm.stormData) return [0];
+
+    var fl =[], wi =[], ic =[];
+    dm.stormData.slice(startInd).forEach((d,i) => {
+      fl.push((d[countyID] && d[countyID].floods) ? d[countyID].floods : 0);
+      wi.push((d[countyID] && d[countyID].winds) ? d[countyID].winds : 0);
+      ic.push((d[countyID] && d[countyID].ice) ? d[countyID].ice : 0);
+    });
+
+    return [fl, wi, ic];
+  };
 
   return dm;
 };
