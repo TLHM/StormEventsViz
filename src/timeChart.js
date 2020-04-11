@@ -46,6 +46,7 @@ export default function timeChart() {
     plot.body.append('rect').attr('id','bg')
       .attr('width',(plot.size.width-plot.margin.left-plot.margin.right)+'px')
       .attr('height',(plot.size.height-plot.margin.top-plot.margin.bottom)+'px')
+      //.attr('fill', 'rgb(51, 27, 40)')
       .attr('fill-opacity','.001');
 
     // Group for lines
@@ -107,7 +108,7 @@ export default function timeChart() {
       .attr('y', '0')
       .attr('x', plot.xScale(timeRange[0]))
       .attr('stroke-width','2')
-      .attr('stroke','black')
+      .attr('stroke','rgb(86, 110, 213)')
       .attr('fill','none');
 
     // function to get line data for this plot
@@ -129,7 +130,7 @@ export default function timeChart() {
     // Function to plot lines in this
     // d should be an array of arrays of y values
     plot.setLines = function(d) {
-      console.log(d);
+      //console.log(d);
       plot.lineG.selectAll('path')
         .data(d)
         .join('path')

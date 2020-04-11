@@ -13,26 +13,69 @@ time.setShift(0);
 time.setMax(289);
 
 // Set up our map
+const logScale = d3.scaleSymlog()
+      .domain([120, 0]);
+
 var baseMap = usMap()
   .dataManager(dm)
   .timer(time)
-  .title("Flooding and Windy Storm Events From 1996 - 2020")
+  .bgColor("rgb(51, 27, 40)")
+  .title("Storm Events 1996 - 2020")
   .layerConfig([
-    { name:'Flooding',
-    scale:d3.scaleSequential([0,120], d3.interpolateViridis),
-    dataID: 'f',
-    mask: 'vert' },
-    { name:'Windy',
-    scale:d3.scaleSequential([0,120], d3.interpolateCool),
-    dataID: 'w',
-    mask: 'vert'}
-  ]);
+    {
+      name:'Flooding',
+      //scale:d3.scaleSequential([0,120], d3.interpolateViridis),
+      scale: d3.scaleSequential((d) => d3.interpolatePuBu(logScale(d))),
+      numScale: d3.scaleSymlog().domain([0,120]).range([0,120]),
+      dataID: 'f',
+      //mask: 'diagMask'
+    },
 
+    {
+      name:'Windy',
+      //scale:d3.scaleSequential([0,120], d3.interpolateCool),
+      scale: d3.scaleSequential((d) => d3.interpolateBuGn(logScale(d))),
+      numScale: d3.scaleSymlog().domain([0,120]).range([0,120]),
+      dataID: 'w',
+      mask: 'diagMask',//'dotMask'
+    }
+  ]);
+var a = baseMap.layerConfig();
+console.log(a[0].scale(5));
+console.log(a[1].scale(5));
 // Create the map svg
 var mapDiv = d3.select('body').append('div')
   .attr('id', 'MapBase')
   .attr('style','width:1020px; height:700px; margin:0 auto');
 var map = baseMap(mapDiv);
+
+// Add patterns and masks
+// Diagonal pattern
+var pat = map.addPattern('patDiag');
+pat.append('path')
+  .attr('fill','none')
+  .attr('stroke','white')
+  .attr('stroke-linecap','square')
+  .attr('d','M 0,2 L 3,5');
+pat.append('path')
+  .attr('fill','none')
+  .attr('stroke','white')
+  .attr('stroke-linecap','square')
+  .attr('d','M 3,0 L 5,2');
+
+// Dot pattern
+var pat = map.addPattern('patDot');
+pat.attr('width',3).attr('height',3);
+pat.append('rect')
+  .attr('fill','white')
+  .attr('x',2)
+  .attr('y',2)
+  .attr('width','1')
+  .attr('height','1');
+
+// Creat mask with each pattern
+map.addMask('diagMask', 'patDiag');
+map.addMask('dotMask', 'patDot');
 
 // Create the lower timeChart
 var timeDiv = d3.select('body').append('div')
@@ -44,9 +87,9 @@ var chartCreator = timeChart()
   .yLabel('Number of Storm Events')
   .lineLabels(["Flooding", "High Winds"])
   .lineStyles([
-    'stroke:blue',
-    'stroke:green; stroke-dasharray: 2,2',
-    'stroke:cyan; stroke-dasharray: 8,4;'
+    'stroke:rgb(56, 143, 192); stroke-width:1.5',
+    'stroke:rgb(66, 171, 117); stroke-dasharray: 2,2; stroke-width:1.5',
+    'stroke:rgb(137, 78, 213); stroke-dasharray: 8,4; stroke-width:1'
   ])
   .onPlay(time.start);
 
@@ -74,7 +117,7 @@ dm.setStorm(function(d){
   time.start();
   map.endLoading();
 
-  map.selectID('08013');
+  setTimeout(function(){map.selectID('08013');}, 1000);
 });
 
 // Have our timer update our map

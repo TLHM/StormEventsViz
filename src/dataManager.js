@@ -40,7 +40,7 @@ export default function dataManager(){
       // if (error) throw error;
 
       dm.stormData = data;
-      console.log(dm.stormData);
+      //console.log(dm.stormData);
 
       func(data);
     };

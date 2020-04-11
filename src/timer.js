@@ -14,7 +14,7 @@ export default function timer(){
   t.currentTime = 0;
   t.maxTime = 0;
   t.shift = 0;
-  t.updateInterval = 1000/6.0;
+  t.updateInterval = 1000/4.0;
   t.ticking = true;
   t.baseYear = 1996;
 
