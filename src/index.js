@@ -134,5 +134,6 @@ dm.start();
 // Add some description to the bottom
 var desc = d3.select('body').append('div').attr('id','description')
   .attr('style', "width:900px; margin: 0 auto; font-family: Trebuchet MS, sans-serif;text-align: center;");
-desc.append('p').text("Helllooooo");
-desc.append('a').attr('href','https://github.com/TLHM/StormEventsViz').text('View on Github');
+desc.append('p').text("Click on counties or the line chart to select a specific place or time, respectively.");
+desc.append('p').text("The data visualized are from the NWS Storm Events Database, significantly simplified and reduced to only the data since 1996. Before that time, not much was reported that fell into my categories of interest: Storm types with flooding or high winds.")
+desc.append('a').attr('href','https://github.com/TLHM/StormEventsViz').text('View on Github for more info.');

@@ -3,6 +3,8 @@ Visualizing data from the National Weather Service using D3.
 
 The data visualized are from the [Storm Events Database](https://www.ncdc.noaa.gov/stormevents/ftp.jsp), significantly simplified and reduced to only the data since 1996. Before that time, not much was reported that fell into my categories of interest: Storm types with flooding or high winds. 
 
+[Live version Here](http://codetako.com/storm)
+
 ### Main Plot
 ![United states with counties colored green and blue](img/mainPlot.png)
 
