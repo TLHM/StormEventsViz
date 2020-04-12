@@ -85,7 +85,7 @@ export default function usMap(){
 
       // Prep the legend
       chart.legend = svg.append('g').attr('id','legend')
-        .attr('transform','translate('+(svgWidth-margin.right-150)+','+(svgHeight/2 + 90)+')');
+        .attr('transform','translate('+(svgWidth-margin.right-160)+','+(svgHeight/2 + 90)+')');
 
       // Group for our masks
       chart.masks = svg.append('g').attr('id', 'masks');
